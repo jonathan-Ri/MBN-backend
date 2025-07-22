@@ -1,12 +1,16 @@
 # api/urls.py
-
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from api.views import PacienteViewSet 
-  
-  # importa aquí las vistas necesarias
-#C:\Users\elper\Desktop\App Medicina Narrativa\Backend\medicinaNarrativa\backend\api\views\paciente_view.py
+from api.views.paciente_view import PacienteViewSet 
+from api.views.usuario_view import UsuarioViewSet
+from api.views.narrativa_escrita_view import NarrativaEscritaViewSet, NarrativasPorPacienteView
+
 router = DefaultRouter()
 router.register(r'pacientes', PacienteViewSet)
+router.register(r'usuarios', UsuarioViewSet)
+router.register(r'narrativas', NarrativaEscritaViewSet)
 
-urlpatterns = router.urls
+urlpatterns = [
+    path('', include(router.urls)),
+    path('narrativas/paciente/<int:paciente_id>/', NarrativasPorPacienteView.as_view(), name='narrativas-por-paciente'),
+]

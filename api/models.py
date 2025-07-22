@@ -24,7 +24,7 @@ class GrupoColectivo(models.Model):
 
 class Medico(models.Model):
     medico_id = models.BigAutoField(db_column='Medico_id', primary_key=True)  
-    usuario = models.ForeignKey('Usuario', models.DO_NOTHING, db_column='Usuario_id')  
+    Usuario = models.ForeignKey('Usuario', models.DO_NOTHING, db_column='Usuario_id')  
     medico_apaterno = models.CharField(db_column='Medico_apaterno', max_length=255)  
     medico_amaterno = models.CharField(db_column='Medico_amaterno', max_length=255, blank=True, null=True)  
     medico_rut = models.CharField(db_column='Medico_rut', max_length=255)  
@@ -52,7 +52,7 @@ class NarrativaArchivo(models.Model):
 
 class NarrativaEscrita(models.Model):
     narrativa_id = models.BigAutoField(db_column='Narrativa_id', primary_key=True)  
-    paciente = models.ForeignKey('Paciente', models.DO_NOTHING, db_column='Paciente_id')  
+    Paciente = models.ForeignKey('Paciente', models.DO_NOTHING, db_column='Paciente_id')  
     narrativa_escrita_contenido = models.TextField(db_column='Narrativa_escrita_contenido')  
     create_at = models.DateField()
     update_at = models.DateField()
@@ -76,13 +76,12 @@ class Notificacion(models.Model):
 
 class Paciente(models.Model):
     paciente_id = models.BigAutoField(db_column='Paciente_id', primary_key=True)  
-    usuario = models.ForeignKey('Usuario', models.DO_NOTHING, db_column='Usuario_id')  
+    Usuario_id = models.ForeignKey('Usuario', models.DO_NOTHING, db_column='Usuario_id')
     paciente_rut = models.CharField(db_column='Paciente_rut', max_length=255)  
     paciente_apaterno = models.CharField(db_column='Paciente_apaterno', max_length=255)  
     paciente_amaterno = models.CharField(db_column='Paciente_amaterno', max_length=255, blank=True, null=True)  
     paciente_genero = models.CharField(db_column='Paciente_genero', max_length=9)  
     paciente_fecha_nacimiento = models.DateField(db_column='Paciente_fecha_nacimiento')  
-
     class Meta:
         managed = False
         db_table = 'paciente'

@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 from ..models import Paciente
-from ..serializers import PacienteSerializer
+from ..serializers.paciente_serializer import PacienteSerializer
 
 class PacienteViewSet(viewsets.ModelViewSet):
     queryset = Paciente.objects.all()
