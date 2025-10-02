@@ -8,9 +8,9 @@ from ..serializers.narrativa_escrita_serializer import NarrativaEscritaSerialize
 class NarrativaEscritaViewSet(viewsets.ModelViewSet):
     queryset = NarrativaEscrita.objects.all()
     serializer_class = NarrativaEscritaSerializer
-    
+
 class NarrativasPorPacienteView(APIView):
     def get(self, request, paciente_id):
-        narrativas = NarrativaEscrita.objects.filter(paciente_id=paciente_id)
+        narrativas = NarrativaEscrita.objects.filter(Paciente_id=paciente_id)
         serializer = NarrativaEscritaSerializer(narrativas, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

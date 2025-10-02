@@ -4,6 +4,10 @@ from rest_framework.routers import DefaultRouter
 from api.views.paciente_view import PacienteViewSet 
 from api.views.usuario_view import UsuarioViewSet
 from api.views.narrativa_escrita_view import NarrativaEscritaViewSet, NarrativasPorPacienteView
+from api.views.register import RegisterView
+from api.views.login_view import LoginView
+from api.views.narraitiva_imagen_view import CrearNarrativaArchivoView
+
 
 router = DefaultRouter()
 router.register(r'pacientes', PacienteViewSet)
@@ -12,5 +16,9 @@ router.register(r'narrativas', NarrativaEscritaViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('narrativa-archivo/', CrearNarrativaArchivoView.as_view(), name='crear-narrativa-archivo'),
+    path("login/", LoginView.as_view(), name="login"),
+    path("register/", RegisterView.as_view(), name="register"),
     path('narrativas/paciente/<int:paciente_id>/', NarrativasPorPacienteView.as_view(), name='narrativas-por-paciente'),
 ]
+

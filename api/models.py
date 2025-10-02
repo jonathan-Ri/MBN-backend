@@ -39,16 +39,14 @@ class Medico(models.Model):
 
 
 class NarrativaArchivo(models.Model):
-    narrativa_archivo_id = models.BigIntegerField(db_column='Narrativa_archivo_id', primary_key=True)  
-    paciente = models.ForeignKey('Paciente', models.DO_NOTHING, db_column='Paciente_id')  
-    narrativa_archivo_url = models.CharField(db_column='Narrativa_archivo_url', max_length=255)  
-    create_at = models.DateField()
-    update_at = models.DateField()
+    narrativa_archivo_id = models.BigAutoField(primary_key=True)
+    paciente = models.ForeignKey('Paciente', models.DO_NOTHING, db_column='Paciente_id')
+    narrativa_archivo_url = models.FileField(upload_to='narrativas/')  # ruta se guarda automáticamente
+    create_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        managed = False
         db_table = 'narrativa_archivo'
-
 
 class NarrativaEscrita(models.Model):
     narrativa_id = models.BigAutoField(db_column='Narrativa_id', primary_key=True)  
@@ -118,8 +116,9 @@ class Usuario(models.Model):
     usuario_correo = models.CharField(db_column='Usuario_correo', max_length=255)  
     usuario_contrasenia = models.CharField(db_column='Usuario_contrasenia', max_length=255)  
     usuario_rol = models.CharField(db_column='Usuario_rol', max_length=8)  
-    create_at = models.DateField()
-    update_at = models.DateField()
+    create_at = models.DateField(auto_now_add=True)
+    update_at = models.DateField(auto_now=True)
+
 
     class Meta:
         managed = False
