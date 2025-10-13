@@ -7,12 +7,16 @@ from api.views.narrativa_escrita_view import NarrativaEscritaViewSet, Narrativas
 from api.views.register import RegisterView
 from api.views.login_view import LoginView
 from api.views.narraitiva_imagen_view import CrearNarrativaArchivoView
+from api.views.medico_view import MedicoViewSet
+from api.views.notificacion_view import NotificacionViewSet
 
 
 router = DefaultRouter()
 router.register(r'pacientes', PacienteViewSet)
 router.register(r'usuarios', UsuarioViewSet)
 router.register(r'narrativas', NarrativaEscritaViewSet)
+router.register(r'medicos', MedicoViewSet)
+router.register(r'notificacion', NotificacionViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
