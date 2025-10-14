@@ -54,7 +54,6 @@ class PacienteSerializer(serializers.ModelSerializer):
             usuario_contrasenia=hashed_password
         )
         paciente = Paciente.objects.create(usuario_id=usuario, **validated_data)
-        print(medico_recomendado)
 
 
 

@@ -9,7 +9,8 @@ from api.views.login_view import LoginView
 from api.views.narraitiva_imagen_view import CrearNarrativaArchivoView
 from api.views.medico_view import MedicoViewSet
 from api.views.notificacion_view import NotificacionViewSet
-
+from api.views.pacienteMedico_view import PacienteMedicoViewSet
+#C:\Users\elper\Desktop\App Medicina Narrativa\Backend\medicinaNarrativa\backend\api\views\pacienteMedico_view.py
 
 router = DefaultRouter()
 router.register(r'pacientes', PacienteViewSet)
@@ -17,6 +18,7 @@ router.register(r'usuarios', UsuarioViewSet)
 router.register(r'narrativas', NarrativaEscritaViewSet)
 router.register(r'medicos', MedicoViewSet)
 router.register(r'notificacion', NotificacionViewSet)
+router.register(r'pacientemedicos', PacienteMedicoViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import Medico, Usuario
+from ..models import Medico, Usuario, Notificacion
 from django.contrib.auth.hashers import make_password
 from ..models import Usuario
 
@@ -20,7 +20,7 @@ class MedicoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Medico
         fields = ["nombre_usuario", "usuario_id","medico_id", "medico_apaterno", "medico_amaterno", "medico_rut", "medico_fecha_nacimiento", "medico_telefono", "medico_centro_atencion", "medico_genero","usuario_data"]
-        read_only_fields = ('medico_id',)
+        read_only_fields = ('medico_id','usuario_id')
 
 
     # 🚨 MÉTODO CORREGIDO: Debe estar INDENTADO dentro de la clase PacienteSerializer
@@ -38,12 +38,31 @@ class MedicoSerializer(serializers.ModelSerializer):
             # Esta línea guarda la contraseña en texto plano, lo cual NO es seguro.
             usuario_contrasenia=hashed_password
         )
-        # Si usas set_password():
-        # usuario.set_password(usuario_data['usuario_contrasenia'])
-        # usuario.save()
-        
-        # 3. Crear el objeto Paciente, vinculándolo con el Usuario creado
-        #    Asigna el objeto 'usuario' al campo ForeignKey 'usuario' del modelo Paciente
+    
         medico = Medico.objects.create(usuario_id=usuario, **validated_data)
+        try:
+            if medico: # Solo crea si el médico existe
+
+                buscar_medico= Usuario.objects.filter(usuario_rol="admin").values('usuario_id').first()
+                print("entra al if")
+                notificacion = Notificacion.objects.create(
+                    usuario_id = 16, # buscar_medico # administrador de prueba, cambiar al desplegar
+                    
+                    # Campos fijos que deseas (ejemplo de bienvenida o registro)
+                    notificacion_visto=0, #  0 = no visto
+                    notificacion_estado='nueva', 
+                    notificacion_contenido=f'Nuevo Medico Registrado. ID: {medico.medico_id}',
+                    notificacion_tipo="registro_usuario_medico"                  
+                )
+                print(notificacion)
+            else:
+                print("no entra al if")
+            
+        except Exception as e:
+            # Es importante loguear cualquier error en la creación de la notificación
+            print(f"Error al crear notificación para el usuario {usuario.usuario_id}: {e}")
+            # NOTA: No hacemos fallar la creación del Paciente si la notificación falla.
+
+
         
         return medico

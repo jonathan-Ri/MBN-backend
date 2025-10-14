@@ -14,8 +14,8 @@ class Administrador(models.Model):
 class GrupoColectivo(models.Model):
     grupo_colectivo_id = models.BigAutoField(db_column='Grupo_colectivo_id', primary_key=True)  
     grupo_colectivo_nombre = models.CharField(db_column='Grupo_colectivo_nombre', max_length=255)  
-    create_at = models.DateField()
-    update_at = models.DateField()
+    create_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         managed = False
@@ -24,7 +24,11 @@ class GrupoColectivo(models.Model):
 
 class Medico(models.Model):
     medico_id = models.BigAutoField(db_column='Medico_id', primary_key=True)  
-    usuario_id = models.ForeignKey('Usuario', models.DO_NOTHING, db_column='Usuario_id') 
+    usuario_id = models.ForeignKey(
+        'Usuario', 
+        models.CASCADE,  
+        db_column='Usuario_id'
+    ) 
     medico_apaterno = models.CharField(db_column='Medico_apaterno', max_length=255)  
     medico_amaterno = models.CharField(db_column='Medico_amaterno', max_length=255, blank=True, null=True)  
     medico_rut = models.CharField(db_column='Medico_rut', max_length=255)  
@@ -57,7 +61,11 @@ class NarrativaArchivo(models.Model):
 
 class NarrativaEscrita(models.Model):
     narrativa_id = models.BigAutoField(db_column='Narrativa_id', primary_key=True)  
-    Paciente = models.ForeignKey('Paciente', models.DO_NOTHING, db_column='Paciente_id')  
+    Paciente = models.ForeignKey(
+        'Paciente', 
+        models.CASCADE,  # <--- Asegura que la narrativa se borre
+        db_column='Paciente_id'
+    ) 
     narrativa_escrita_contenido = models.TextField(db_column='Narrativa_escrita_contenido') 
     create_at = models.DateField()
     update_at = models.DateField()
@@ -80,7 +88,7 @@ class Notificacion(models.Model):
         db_column='update_at',
         auto_now=True     
     )
-    usuario = models.ForeignKey('Usuario', models.DO_NOTHING, db_column='Usuario_id', blank=True, null=True) 
+    usuario = models.ForeignKey('Usuario', models.CASCADE, db_column='Usuario_id', blank=True, null=True) 
     notificacion_estado = models.CharField(
         max_length=255,            
         default='nueva',          
@@ -104,7 +112,11 @@ class Notificacion(models.Model):
 
 class Paciente(models.Model):
     paciente_id = models.BigAutoField(db_column='Paciente_id', primary_key=True)  
-    usuario_id = models.ForeignKey('Usuario', models.DO_NOTHING, db_column='Usuario_id', null=True)
+    usuario_id = models.ForeignKey(
+        'Usuario', 
+        models.CASCADE,  
+        db_column='Usuario_id'
+    )
     paciente_rut = models.CharField(db_column='Paciente_rut', max_length=255)  
     paciente_apaterno = models.CharField(db_column='Paciente_apaterno', max_length=255)  
     paciente_amaterno = models.CharField(db_column='Paciente_amaterno', max_length=255, blank=True, null=True)  
@@ -116,11 +128,11 @@ class Paciente(models.Model):
 
 
 class PacienteGrupo(models.Model):
-    paciente_grupo_id = models.BigIntegerField(db_column='Paciente_Grupo_id', primary_key=True)  
-    paciente = models.ForeignKey(Paciente, models.DO_NOTHING, db_column='Paciente_id')  
-    grupo_colectivo = models.ForeignKey(GrupoColectivo, models.DO_NOTHING, db_column='Grupo_colectivo_id')  
-    create_at = models.DateField()
-    update_at = models.DateField()
+    paciente_grupo_id = models.BigAutoField(db_column='Paciente_Grupo_id', primary_key=True)  
+    paciente = models.ForeignKey(Paciente, models.CASCADE, db_column='Paciente_id')  
+    grupo_colectivo = models.ForeignKey(GrupoColectivo, models.CASCADE, db_column='Grupo_colectivo_id')  
+    create_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         managed = False
@@ -128,12 +140,12 @@ class PacienteGrupo(models.Model):
 
 
 class PacienteMedico(models.Model):
-    paciente_medico_id = models.BigIntegerField(db_column='Paciente_Medico_id', primary_key=True)  
-    paciente = models.ForeignKey(Paciente, models.DO_NOTHING, db_column='Paciente_id')  
-    medico = models.ForeignKey(Medico, models.DO_NOTHING, db_column='Medico_id')  
+    paciente_medico_id = models.BigAutoField(db_column='Paciente_Medico_id', primary_key=True)  
+    paciente = models.ForeignKey(Paciente, models.CASCADE, db_column='Paciente_id')  
+    medico = models.ForeignKey(Medico, models.CASCADE, db_column='Medico_id')  
     paciente_medico_validado = models.IntegerField()
-    create_at = models.DateField()
-    update_at = models.DateField()
+    create_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         managed = False

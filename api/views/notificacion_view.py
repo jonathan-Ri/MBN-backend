@@ -24,7 +24,7 @@ class NotificacionViewSet(viewsets.ModelViewSet):
         
         if user_id_a_filtrar is not None:
             # ✅ Filtrar solo si user_id_a_filtrar es un entero válido (el ID del usuario)
-            return Notificacion.objects.filter(usuario_id=18)
+            return Notificacion.objects.filter(usuario_id=user_id_a_filtrar)
         
         # ❌ Si el ID no es válido o no se proporcionó, no debe devolver todas las notificaciones
         # con usuario_id=null, sino un conjunto vacío (por seguridad)

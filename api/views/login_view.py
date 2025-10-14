@@ -44,7 +44,8 @@ class LoginView(APIView):
                     "nombre": usuario.usuario_nombre,
                     "correo": usuario.usuario_correo,
                     "rol": usuario.usuario_rol,
-                    "medico_id": medico.medico_id
+                    "medico_id": medico.medico_id,
+                    "usuario_verificado":usuario.usuario_verificado
                 }
                 response_data = {
                     "usuario": usuario_data
@@ -65,7 +66,8 @@ class LoginView(APIView):
                     "nombre": usuario.usuario_nombre,
                     "correo": usuario.usuario_correo,
                     "rol": usuario.usuario_rol,
-                    "paciente_id": paciente.paciente_id
+                    "paciente_id": paciente.paciente_id,
+                    "usuario_verificado":usuario.usuario_verificado
                 }
                 response_data = {
                     "usuario": usuario_data
@@ -77,6 +79,7 @@ class LoginView(APIView):
                 "nombre": usuario.usuario_nombre,
                 "correo": usuario.usuario_correo,
                 "rol": usuario.usuario_rol,
+                "usuario_verificado":usuario.usuario_verificado
             }
             response_data = {
                 "usuario": usuario_data
