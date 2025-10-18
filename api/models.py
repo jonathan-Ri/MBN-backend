@@ -14,8 +14,8 @@ class Administrador(models.Model):
 class GrupoColectivo(models.Model):
     grupo_colectivo_id = models.BigAutoField(db_column='Grupo_colectivo_id', primary_key=True)  
     grupo_colectivo_nombre = models.CharField(db_column='Grupo_colectivo_nombre', max_length=255)  
-    create_at = models.DateTimeField(auto_now_add=True)
-    update_at = models.DateTimeField(auto_now=True)
+    create_at = models.DateField() 
+    update_at = models.DateField()
 
     class Meta:
         managed = False
@@ -131,8 +131,8 @@ class PacienteGrupo(models.Model):
     paciente_grupo_id = models.BigAutoField(db_column='Paciente_Grupo_id', primary_key=True)  
     paciente = models.ForeignKey(Paciente, models.CASCADE, db_column='Paciente_id')  
     grupo_colectivo = models.ForeignKey(GrupoColectivo, models.CASCADE, db_column='Grupo_colectivo_id')  
-    create_at = models.DateTimeField(auto_now_add=True)
-    update_at = models.DateTimeField(auto_now=True)
+    create_at = models.DateField() 
+    update_at = models.DateField()
 
     class Meta:
         managed = False
