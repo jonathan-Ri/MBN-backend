@@ -3,7 +3,8 @@ from rest_framework import serializers
 
 
 class PacienteMedicoSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = PacienteMedico
         fields = '__all__' 
-        read_only_fields = ('create_at', 'update_at')
+        read_only_fields = ('create_at', 'update_at', 'paciente_medico_id')

@@ -144,8 +144,8 @@ class PacienteMedico(models.Model):
     paciente = models.ForeignKey(Paciente, models.CASCADE, db_column='Paciente_id')  
     medico = models.ForeignKey(Medico, models.CASCADE, db_column='Medico_id')  
     paciente_medico_validado = models.IntegerField()
-    create_at = models.DateTimeField(auto_now_add=True)
-    update_at = models.DateTimeField(auto_now=True)
+    create_at = models.DateField(auto_now_add=True) 
+    update_at = models.DateField(auto_now=True)
 
     class Meta:
         managed = False
