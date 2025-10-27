@@ -1,4 +1,3 @@
-# api/views.py
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -17,7 +16,7 @@ class LoginView(APIView):
         try:
             usuario = Usuario.objects.get(usuario_correo=correo)
         except Usuario.DoesNotExist:
-            return Response({"error": "Usuario no encontrado"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "Correo no encontrado, verifique que el correo sea correcto,"}, status=status.HTTP_401_UNAUTHORIZED) # Mensaje genérico
 
 
         print("Password plano recibido:", contrasenia)
@@ -26,7 +25,7 @@ class LoginView(APIView):
         response_data = {}
 
         if not check_password(contrasenia, usuario.usuario_contrasenia):
-            return Response({"error": "Contraseña incorrecta"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"error": "Contraseña incorrecta o cuenta no relacionada para la contraseña introducida"}, status=status.HTTP_401_UNAUTHORIZED)
         
 
         usuario_id_a_buscar = usuario.usuario_id 
