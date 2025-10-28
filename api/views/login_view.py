@@ -1,11 +1,13 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.hashers import check_password
-from ..models import Usuario
 from rest_framework.permissions import AllowAny
-from ..models import Medico, Paciente
+from django.contrib.auth import get_user_model
+from rest_framework_simplejwt.tokens import RefreshToken
+from ..models import Usuario, Medico, Paciente
+from .otp_mail_view import SendOtpEmailView, OTP_TIMEOUT, cache, random, send_mail, settings
+
 class LoginView(APIView):
     #usuario_correo
     #usuario_contrasenia
@@ -17,74 +19,41 @@ class LoginView(APIView):
             usuario = Usuario.objects.get(usuario_correo=correo)
         except Usuario.DoesNotExist:
             return Response({"error": "Correo no encontrado, verifique que el correo sea correcto,"}, status=status.HTTP_401_UNAUTHORIZED) # Mensaje genérico
-
-
-        print("Password plano recibido:", contrasenia)
-        print("Password en DB:", usuario.usuario_contrasenia)
-        print("Usuario rol:", usuario.usuario_rol)
         response_data = {}
 
         if not check_password(contrasenia, usuario.usuario_contrasenia):
             return Response({"error": "Contraseña incorrecta o cuenta no relacionada para la contraseña introducida"}, status=status.HTTP_401_UNAUTHORIZED)
         
 
-        usuario_id_a_buscar = usuario.usuario_id 
+        #usuario_id_a_buscar = usuario.usuario_id 
 
-        if usuario.usuario_rol == "medico":
-            
-            try:
-                medico = Medico.objects.get(usuario_id=usuario_id_a_buscar)
-            except Medico.DoesNotExist:
-                # Maneja el caso en que no se encuentre ningún médico
-                medico = None 
-            if medico:
-                usuario_data = {
-                    "id": usuario.pk,
-                    "nombre": usuario.usuario_nombre,
-                    "correo": usuario.usuario_correo,
-                    "rol": usuario.usuario_rol,
-                    "medico_id": medico.medico_id,
-                    "usuario_verificado":usuario.usuario_verificado
-                }
-                response_data = {
-                    "usuario": usuario_data
-                }
-        elif usuario.usuario_rol == "paciente":
+        # Generar Código OTP (ej: 6 dígitos)
+        otp_code = ''.join(random.choices('0123456789', k=6))
+        
+        # Guardar el código en la caché
+        cache_key = f'otp_{usuario.usuario_id}'
+        cache.set(cache_key, otp_code, timeout=OTP_TIMEOUT)
 
-            print(usuario_id_a_buscar)
-            try:
-                # Filtra el modelo Medico donde el campo 'usuario_id' es igual al ID del usuario
-                paciente = Paciente.objects.get(usuario_id=usuario_id_a_buscar)
-            except Medico.DoesNotExist:
-                # Maneja el caso en que no se encuentre ningún médico
-                paciente = None 
-            print("Paciente relacionado:", paciente)
-            if paciente:
-                usuario_data = {
-                    "id": usuario.pk,
-                    "nombre": usuario.usuario_nombre,
-                    "correo": usuario.usuario_correo,
-                    "rol": usuario.usuario_rol,
-                    "paciente_id": paciente.paciente_id,
-                    "usuario_verificado":usuario.usuario_verificado
-                }
-                response_data = {
-                    "usuario": usuario_data
-                }
-                # Generar tokens JWT
-        elif usuario.usuario_rol == "admin":
-            usuario_data = {
-                "id": usuario.pk,
-                "nombre": usuario.usuario_nombre,
-                "correo": usuario.usuario_correo,
-                "rol": usuario.usuario_rol,
-                "usuario_verificado":usuario.usuario_verificado
-            }
-            response_data = {
-                "usuario": usuario_data
-            }
-
-  #      refresh = RefreshToken.for_user(usuario)
-        else:
-            return Response({"error": "Rol de usuario no reconocido"}, status=status.HTTP_400_BAD_REQUEST)
-        return Response(response_data)
+       # Enviar el Email
+        try:
+            send_mail(
+                'Tu Código de Verificación de un Solo Uso (2FA)',
+                f'Tu código de verificación para iniciar sesión es: {otp_code}. Este código expira en 5 minutos.',
+                settings.DEFAULT_FROM_EMAIL,
+                [usuario.usuario_correo], # Usamos usuario.usuario_correo
+                fail_silently=False,
+            )
+            # 💡 Respuesta al frontend: Indicar que el 2FA es requerido y el código fue enviado.
+            return Response(
+                {"detail": "Credenciales correctas. Se requiere código 2FA. Código enviado a tu correo.", 
+                 "email": usuario.usuario_correo # Útil para el paso 2 del frontend
+                }, 
+                status=status.HTTP_202_ACCEPTED # 202 Accepted es un buen código para "proceso iniciado"
+            )
+        except Exception as e:
+            # Manejar errores de correo electrónico (importante)
+            print(f"Error al enviar email: {e}")
+            return Response(
+                {"error": "Error al enviar el código de verificación por correo."}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

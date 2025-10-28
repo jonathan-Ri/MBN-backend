@@ -12,6 +12,7 @@ from api.views.notificacion_view import NotificacionViewSet
 from api.views.pacienteMedico_view import PacienteMedicoViewSet
 from api.views.grupo_colectivo_view import GrupoColectivoViewSet
 from api.views.paciente_grupo_view import PacienteGrupoViewSet
+from api.views.otp_mail_view import VerifyOtpEmailView
 #C:\Users\elper\Desktop\App Medicina Narrativa\Backend\medicinaNarrativa\backend\api\views\pacienteMedico_view.py
 
 router = DefaultRouter()
@@ -30,5 +31,6 @@ urlpatterns = [
     path("login/", LoginView.as_view(), name="login"),
     path("register/", RegisterView.as_view(), name="register"),
     path('narrativas/paciente/<int:paciente_id>/', NarrativasPorPacienteView.as_view(), name='narrativas-por-paciente'),
+    path('verify-otp-email/', VerifyOtpEmailView.as_view(), name='verify_otp_email'),
 ]
 

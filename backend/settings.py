@@ -31,6 +31,8 @@ DEBUG = True
 ALLOWED_HOSTS = ["*"]
 
 
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -43,7 +45,22 @@ INSTALLED_APPS = [
     'rest_framework',
     'api',
     "django_extensions",
+    'django.contrib.sites',
+    'otp_yubikey',
+    'django_otp',
+    'two_factor',
 ]
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+#remplazar en producción
+EMAIL_HOST_USER = 'xnikeblackx@gmail.com'
+EMAIL_HOST_PASSWORD = 'auaq kmnt lufa inuj'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+SITE_ID = 1
 INSTALLED_APPS += ['corsheaders']
 
 MIDDLEWARE = [
@@ -149,6 +166,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
+    'USER_ID_FIELD': 'usuario_id',
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "AUTH_HEADER_TYPES": ("Bearer",),
