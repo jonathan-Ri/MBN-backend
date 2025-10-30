@@ -13,6 +13,8 @@ from api.views.pacienteMedico_view import PacienteMedicoViewSet
 from api.views.grupo_colectivo_view import GrupoColectivoViewSet
 from api.views.paciente_grupo_view import PacienteGrupoViewSet
 from api.views.otp_mail_view import VerifyOtpEmailView
+from api.views.recuperar_contraseña_view import password_reset_request, password_reset_confirm
+from api.views.admin_id import GetAdminId
 #C:\Users\elper\Desktop\App Medicina Narrativa\Backend\medicinaNarrativa\backend\api\views\pacienteMedico_view.py
 
 router = DefaultRouter()
@@ -25,6 +27,7 @@ router.register(r'pacientemedicos', PacienteMedicoViewSet)
 router.register(r'grupocolectivo', GrupoColectivoViewSet)
 router.register(r'pacientegrupo', PacienteGrupoViewSet)
 
+
 urlpatterns = [
     path('', include(router.urls)),
     path('narrativa-archivo/', CrearNarrativaArchivoView.as_view(), name='crear-narrativa-archivo'),
@@ -32,5 +35,8 @@ urlpatterns = [
     path("register/", RegisterView.as_view(), name="register"),
     path('narrativas/paciente/<int:paciente_id>/', NarrativasPorPacienteView.as_view(), name='narrativas-por-paciente'),
     path('verify-otp-email/', VerifyOtpEmailView.as_view(), name='verify_otp_email'),
+    path('admin-id/', GetAdminId.as_view(), name='admin_id'),
+    path('auth/reset_password/', password_reset_request, name='password_reset_request'),
+    path('auth/reset_password_confirm/', password_reset_confirm, name='password_reset_confirm'),
 ]
 
